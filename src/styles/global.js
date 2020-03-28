@@ -32,6 +32,14 @@ const GlobalStyle = createGlobalStyle`
       font-family: 'Verdana Regular' !important;
   }
 
+  .hasError {
+      color: #f44336;
+      font-size: 12px;
+      margin-top: 10px;
+      font-family: 'Verdana Regular';
+      font-size: 13px
+  }
+
   .rccs {
       width: 364px;
       height: 224px;

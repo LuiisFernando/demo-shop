@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { theme } from '../../styles/global';
 import { 
-    makeStyles,
     Grid, 
     InputAdornment,
     IconButton,
@@ -12,55 +10,18 @@ import {
 } from '@material-ui/core';
 import {ArrowBackIos, CheckCircle} from '@material-ui/icons';
 import Card from 'react-credit-cards';
-import { Formik, Form, Field } from 'formik';
-
-import card from '../../assets/card.svg';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 import {
     formatCreditCardNumber,
     formatCVC,
     formatExpirationDate,
-    formatFormData,
   } from '../../helper/index';
 
-const useStyles = makeStyles({
-    container: {
-        display: 'flex',
-        flex: '1',
-        height: '100%'
-    },
-    carSide: {
-        background: theme.colors.background,
-        paddingTop: '54px',
-        paddingLeft: '68px'
-    },
-    cardInfo: {
-        marginTop: '50px',
-        marginLeft: '70px',
-        display: 'flex',
-        flexDirection: 'row',
-    },
-    cardTitle: {
-        fontFamily: 'Verdana, Bold',
-        fontSize: '20px',
-        color: '#FFF',
-        marginLeft: '15px'
-    },
-    infoSide: {
-        background: '#FFF',
-        padding: '50px 50px 0 250px'
-    },
-    button: {
-        background: '#DE4B4B',
-        width: '246px',
-        height: '51px',
-        borderRadius: '10px',
-        color: '#FFF',
-        '&:hover': {
-            background: '#ad4b4b'
-        }
-    }
-});
+import { schema } from '../../helper/schema';
+
+import card from '../../assets/card.svg';
+import { useStyles } from './styles';
 
 export default function Checkout() {
     const classe = useStyles('');
@@ -70,14 +31,28 @@ export default function Checkout() {
     const [name, setName] = useState('');
     const [number, setNumber] = useState('');
 
+    const initialValues = {
+        number: '',
+        name: '',
+        expiry: '',
+        cvv: '',
+        parcelas: ''
+    };
+
     function handleInputFocus(input) {
         setFocus(input);
     }
 
-
+    function handleSubmit({ number, name, expiry, cvv, parcelas }) {
+        console.log(number);
+        console.log(name);
+        console.log(expiry);
+        console.log(cvv);
+        console.log(parcelas);
+    }
 
     return (
-        <Grid container direction="row" className={classe.container}>
+        <Grid container className={classe.container}>
             <Grid item xs={4} md={4} className={classe.carSide}>
                 <div>
                     <InputAdornment position="end">
@@ -110,74 +85,88 @@ export default function Checkout() {
                 </Grid>
                 <Grid item xs md style={{ marginTop: '75px' }}>
                     <div style={{ margin: ''}}>
-                        <Formik>
-                            <Form>
-                                <Grid item xs={12} md={12}>
-                                    <Field 
-                                        name="cardNumber"
-                                        children={({ field }) => (
-                                            <TextField
-                                                style={{ width: '100%' }}
-                                                label="Número do cartão"
-                                                type="tel"
-                                                name="number"
-                                                pattern="[\d| ]{16,22}"
-                                                value={number}
-                                                onChange={(e) => {
-                                                    const value = formatCreditCardNumber(e.target.value);
-                                                    console.log(value);
-                                                    setNumber(value);
-                                                }}
-                                                onFocus={() => handleInputFocus('number')}
-                                            />
-                                        )}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} md={12} style={{ marginTop: '60px' }}>
-                                    <Field 
-                                        name="nome"
-                                        children={({ field }) => (
-                                            <TextField
-                                                style={{ width: '100%' }}
-                                                label="Nome (igual ao cartão)"
-                                                type="tel"
-                                                name="name"
-                                                pattern="[\d| ]{16,22}"
-                                                value={name}
-                                                onChange={(e) => {
-                                                    setName(e.target.value);
-                                                }}
-                                                onFocus={() => handleInputFocus('name')}
-                                            />
-                                        )}
-                                    />
-                                </Grid>
-                                <Grid container direction="row" style={{ marginTop: '60px' }}>
-                                    <Grid item xs={6} md={6}>
-                                        <Field 
-                                            name="expiry"
+                        <Formik
+                            validationSchema={schema}
+                            initialValues={initialValues}
+                            onSubmit={handleSubmit}
+                        >
+                            {({ setFieldValue }) => (
+                                <Form>
+                                    <Grid item xs={12} md={12} style={{ paddingBottom: '40px', maxHeight: '80px' }}>
+                                        <Field
+                                            style={{ marginBottom: '5px' }}
+                                            name="number"
                                             children={({ field }) => (
                                                 <TextField
-                                                    style={{ width: '90%' }}
-                                                    label="Validade"
+                                                    style={{ width: '100%' }}
+                                                    label="Número do cartão"
                                                     type="tel"
-                                                    name="expiry"
-                                                    pattern="\d\d/\d\d"
-                                                    value={expiry}
+                                                    name="number"
+                                                    pattern="[\d| ]{16,22}"
+                                                    value={number}
                                                     onChange={(e) => {
-                                                        const value = formatExpirationDate(e.target.value);
-                                                        setExpiry(value);
+                                                        const value = formatCreditCardNumber(e.target.value);
+                                                        setNumber(value);
+                                                        setFieldValue('number', value);
                                                     }}
-                                                    onFocus={() => handleInputFocus('expiry')}
+                                                    onFocus={() => handleInputFocus('number')}
                                                 />
                                             )}
                                         />
+                                        <ErrorMessage name="number" component="div" className="hasError" />
                                     </Grid>
-                                    <Grid item xs={6} md={6}>
+                                    <Grid item xs={12} md={12} style={{ marginTop: '10px', paddingBottom: '40px', maxHeight: '80px' }}>
                                         <Field 
+                                            name="name"
+                                            children={({ field }) => (
+                                                <TextField
+                                                    {...field}
+                                                    style={{ width: '100%' }}
+                                                    label="Nome (igual ao cartão)"
+                                                    type="tel"
+                                                    name="name"
+                                                    pattern="[\d| ]{16,22}"
+                                                    value={name}
+                                                    onChange={(e) => {
+                                                        setName(e.target.value);
+                                                        setFieldValue('name', e.target.value);
+                                                    }}
+                                                    onFocus={() => handleInputFocus('name')}
+                                                />
+                                            )}
+                                        />
+                                        <ErrorMessage name="name" component="div" className="hasError" />
+                                    </Grid>
+                                    <Grid container direction="row" style={{ marginTop: '10px', paddingBottom: '40px', maxHeight: '80px' }}>
+                                        <Grid item xs={6} md={6}>
+                                            <Field 
+                                                name="expiry"
+                                                children={({ field }) => (
+                                                    <TextField
+                                                        {...field}
+                                                        style={{ width: '90%' }}
+                                                        label="Validade"
+                                                        type="tel"
+                                                        name="expiry"
+                                                        pattern="\d\d/\d\d"
+                                                        value={expiry}
+                                                        onChange={(e) => {
+                                                            const value = formatExpirationDate(e.target.value);
+                                                            setExpiry(value);
+                                                            setFieldValue('expiry', value);
+                                                        }}
+                                                        onFocus={() => handleInputFocus('expiry')}
+                                                    />
+                                                )}
+                                            />
+                                            <ErrorMessage name="expiry" component="div" className="hasError" />
+                                        </Grid>
+                                        <Grid item xs={6} md={6}>
+                                            <Field 
                                                 name="cvv"
                                                 children={({ field }) => (
                                                     <TextField
+                                                        {...field}
                                                         style={{ width: '100%' }}
                                                         label="CVV"
                                                         type="tel"
@@ -187,40 +176,44 @@ export default function Checkout() {
                                                         onChange={(e) => {
                                                             const value = formatCVC(e.target.value);
                                                             setCvv(value);
+                                                            setFieldValue('cvv', value);
                                                         }}
                                                         onFocus={() => handleInputFocus('cvc')}
                                                         onBlur={() => handleInputFocus('')}
                                                     />
                                                 )}
                                             />
+                                            <ErrorMessage name="cvv" component="div" className="hasError" />
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                                <Grid item style={{ marginTop: '60px' }}>
-                                    <Field
-                                        name="parcelas"
-                                        children={({field}) => (
-                                            <Select
-                                                native
-                                                label="Número de parcelas"
-                                                style={{width: '100%'}}
-                                            >
-                                                <option value="" />
-                                                <option value="1">1x 1000 Sem Juros</option>
-                                                <option value="2">2x 2000 Sem Juros</option>
-                                                <option value="3">3x 3000 Sem Juros</option>
-                                            </Select>
-                                        )}
-                                    />
-                                </Grid>
-                                <Grid container justify="flex-end" style={{ marginTop: '60px' }}>
-                                    <Button className={classe.button}>CONTINUAR</Button>
-                                </Grid>
-                            </Form>
+                                    <Grid item style={{ marginTop: '10px', paddingBottom: '40px', maxHeight: '80px' }}>
+                                        <Field
+                                            name="parcelas"
+                                            children={({field}) => (
+                                                <Select
+                                                    {...field}
+                                                    native
+                                                    label="Número de parcelas"
+                                                    style={{width: '100%'}}
+                                                >
+                                                    <option value="">Número de parcelas</option>
+                                                    <option value="1">1x 1000 Sem Juros</option>
+                                                    <option value="2">2x 2000 Sem Juros</option>
+                                                    <option value="3">3x 3000 Sem Juros</option>
+                                                </Select>
+                                            )}
+                                        />
+                                        <ErrorMessage name="parcelas" component="div" className="hasError" />
+                                    </Grid>
+                                    <Grid container justify="flex-end" style={{ marginTop: '60px' }}>
+                                        <Button type="submit" className={classe.button}>CONTINUAR</Button>
+                                    </Grid>
+                                </Form>
+                            )}
                         </Formik>
                     </div>
                 </Grid>
             </Grid>
- 
         </Grid>
     );
 }
