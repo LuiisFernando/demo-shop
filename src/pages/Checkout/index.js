@@ -92,7 +92,7 @@ export default function Checkout() {
                     <img src={card} alt="card-img" />
                     <Typography className={classe.cardTitle}>Adicione um novo cartão de crédito</Typography>
                 </div>
-                <div style={{ marginTop: '30px', marginLeft: '150px' }}>
+                <div style={{ marginTop: '30px', marginLeft: '70px' }}>
                     <Card
                         cvc={cvv}
                         expiry={expiry}
@@ -189,12 +189,13 @@ export default function Checkout() {
                                                             setCvv(value);
                                                         }}
                                                         onFocus={() => handleInputFocus('cvc')}
+                                                        onBlur={() => handleInputFocus('')}
                                                     />
                                                 )}
                                             />
                                     </Grid>
                                 </Grid>
-                                <Grid item xd md style={{ marginTop: '60px' }}>
+                                <Grid item style={{ marginTop: '60px' }}>
                                     <Field
                                         name="parcelas"
                                         children={({field}) => (

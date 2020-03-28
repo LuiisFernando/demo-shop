@@ -28,6 +28,20 @@ const GlobalStyle = createGlobalStyle`
     background-color: #FFF;
   }
 
+  label {
+      font-family: 'Verdana Regular' !important;
+  }
+
+  .rccs {
+      width: 364px;
+      height: 224px;
+  }
+
+  .rccs__card {    
+      width: 364px;
+      height: 224px;
+  }
+
 `;
 
 export { GlobalStyle, theme };
