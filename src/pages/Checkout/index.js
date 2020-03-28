@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { theme } from '../../styles/global';
-import { Grid, makeStyles, InputAdornment, IconButton, Typography, TextField } from '@material-ui/core';
+import { 
+    makeStyles,
+    Grid, 
+    InputAdornment,
+    IconButton,
+    Typography,
+    TextField,
+    Select,
+    Button
+} from '@material-ui/core';
 import {ArrowBackIos, CheckCircle} from '@material-ui/icons';
 import Card from 'react-credit-cards';
 import { Formik, Form, Field } from 'formik';
@@ -39,7 +48,17 @@ const useStyles = makeStyles({
     },
     infoSide: {
         background: '#FFF',
-        padding: '50px 20px 0 300px'
+        padding: '50px 50px 0 250px'
+    },
+    button: {
+        background: '#DE4B4B',
+        width: '246px',
+        height: '51px',
+        borderRadius: '10px',
+        color: '#FFF',
+        '&:hover': {
+            background: '#ad4b4b'
+        }
     }
 });
 
@@ -98,7 +117,7 @@ export default function Checkout() {
                                         name="cardNumber"
                                         children={({ field }) => (
                                             <TextField
-                                                style={{ width: '90%' }}
+                                                style={{ width: '100%' }}
                                                 label="Número do cartão"
                                                 type="tel"
                                                 name="number"
@@ -119,7 +138,7 @@ export default function Checkout() {
                                         name="nome"
                                         children={({ field }) => (
                                             <TextField
-                                                style={{ width: '90%' }}
+                                                style={{ width: '100%' }}
                                                 label="Nome (igual ao cartão)"
                                                 type="tel"
                                                 name="name"
@@ -159,7 +178,7 @@ export default function Checkout() {
                                                 name="cvv"
                                                 children={({ field }) => (
                                                     <TextField
-                                                        style={{ width: '90%' }}
+                                                        style={{ width: '100%' }}
                                                         label="CVV"
                                                         type="tel"
                                                         name="cvv"
@@ -174,6 +193,26 @@ export default function Checkout() {
                                                 )}
                                             />
                                     </Grid>
+                                </Grid>
+                                <Grid item xd md style={{ marginTop: '60px' }}>
+                                    <Field
+                                        name="parcelas"
+                                        children={({field}) => (
+                                            <Select
+                                                native
+                                                label="Número de parcelas"
+                                                style={{width: '100%'}}
+                                            >
+                                                <option value="" />
+                                                <option value="1">1x 1000 Sem Juros</option>
+                                                <option value="2">2x 2000 Sem Juros</option>
+                                                <option value="3">3x 3000 Sem Juros</option>
+                                            </Select>
+                                        )}
+                                    />
+                                </Grid>
+                                <Grid container justify="flex-end" style={{ marginTop: '60px' }}>
+                                    <Button className={classe.button}>CONTINUAR</Button>
                                 </Grid>
                             </Form>
                         </Formik>
