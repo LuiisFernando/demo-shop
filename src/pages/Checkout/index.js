@@ -8,7 +8,7 @@ import {
     Select,
     Button
 } from '@material-ui/core';
-import {ArrowBackIos, CheckCircle} from '@material-ui/icons';
+import {ArrowBackIos, CheckCircle, ArrowForwardIos} from '@material-ui/icons';
 import Card from 'react-credit-cards';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 
@@ -19,6 +19,8 @@ import {
   } from '../../helper/index';
 
 import { schema } from '../../helper/schema';
+
+import { addCard } from '../../services/api/addCardApi';
 
 import card from '../../assets/card.svg';
 import { useStyles } from './styles';
@@ -43,31 +45,44 @@ export default function Checkout() {
         setFocus(input);
     }
 
-    function handleSubmit({ number, name, expiry, cvv, parcelas }) {
+    async function handleSubmit({ number, name, expiry, cvv, parcelas }) {
         console.log(number);
         console.log(name);
         console.log(expiry);
         console.log(cvv);
         console.log(parcelas);
+
+        await addCard({
+            number,
+            name,
+            expiry,
+            cvv,
+            parcelas
+        })
     }
 
     return (
         <Grid container className={classe.container}>
-            <Grid item xs={4} md={4} className={classe.carSide}>
+            <Grid item xs={12} sm={12} md={4} lg={4} xl={4} className={classe.carSide}>
                 <div>
                     <InputAdornment position="end">
                         <IconButton edge="end" style={{ color: '#FFf', marginRight: '5px' }}>
                             <ArrowBackIos />
                         </IconButton>
-                        <Typography style={{ color: '#FFf'}}>Alterar forma de pagamento</Typography>
+                        <Typography className={classe.textoAlterar}>
+                            Alterar forma de pagamento
+                        </Typography>
                     </InputAdornment>
                     
+                </div>
+                <div className={classe.etapa}>
+                    <span style={{fontFamily: 'Verdana, Bold'}}>Etapa</span> 2 de 3
                 </div>
                 <div className={classe.cardInfo}>
                     <img src={card} alt="card-img" />
                     <Typography className={classe.cardTitle}>Adicione um novo cartão de crédito</Typography>
                 </div>
-                <div style={{ marginTop: '30px', marginLeft: '70px' }}>
+                <div className={classe.card}>
                     <Card
                         cvc={cvv}
                         expiry={expiry}
@@ -78,12 +93,35 @@ export default function Checkout() {
                 </div>
 
             </Grid>
-            <Grid item xs={8} md={8} className={classe.infoSide}>
-                <Grid container direction="row">
-                    <CheckCircle />
-                    Carrinho
+            <Grid item xs={12} sm={12} md={8} lg={8} xl={8} className={classe.infoSide}>
+                <Grid container direction="row" className={classe.passos}>
+                    <div className={classe.step1}>
+                    <CheckCircle style={{color: 'red' }} />
+                    <span className={classe.stepText}>
+                        Carrinho
+                    </span>
+                    <ArrowForwardIos style={{color: 'red' }}/>
+                    </div>
+                    <div className={classe.step2}>
+                        <div className={classe.circledNumber}>
+                            2
+                        </div>
+                        <span className={classe.stepText}>
+                            Pagamento
+                        </span>
+                        <ArrowForwardIos style={{color: 'red' }}/>
+                    </div>
+                    <div className={classe.step3}>
+                         <div className={classe.circledNumber}>
+                            3
+                        </div>
+                        <span className={classe.stepText}>
+                            Confirmação
+                        </span>
+                        <ArrowForwardIos style={{color: 'red' }}/>
+                    </div>
                 </Grid>
-                <Grid item xs md style={{ marginTop: '75px' }}>
+                <Grid item xs={12} sm={12} md={12} lg={12} xl={12} style={{ marginTop: '75px' }}>
                     <div style={{ margin: ''}}>
                         <Formik
                             validationSchema={schema}
@@ -205,7 +243,7 @@ export default function Checkout() {
                                         />
                                         <ErrorMessage name="parcelas" component="div" className="hasError" />
                                     </Grid>
-                                    <Grid container justify="flex-end" style={{ marginTop: '60px' }}>
+                                    <Grid container className={classe.gridButton}>
                                         <Button type="submit" className={classe.button}>CONTINUAR</Button>
                                     </Grid>
                                 </Form>

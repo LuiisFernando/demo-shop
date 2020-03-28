@@ -3,6 +3,7 @@ import 'react-credit-cards/es/styles-compiled.css';
 
 
 const theme = {
+    breakpoints: [30, 36, 48, 62, 75, 100, 1279, 1920],
     colors: {
             background: '#DE4B4B'
     }
@@ -49,6 +50,18 @@ const GlobalStyle = createGlobalStyle`
       width: 364px;
       height: 224px;
   }
+
+  @media only screen and (max-width: 414px) {
+    .rccs {
+      width: 290px;
+      height: 182px;
+  }
+
+  .rccs__card {    
+      width: 290px;
+      height: 182px;
+  }
+}
 
 `;
 
